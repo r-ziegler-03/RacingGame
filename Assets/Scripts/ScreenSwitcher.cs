@@ -6,6 +6,7 @@ public enum ScreenTypes
     Menu,
     Settings,
     Selection,
+    Pause,
 }
 
 public class ScreenSwitcher : MonoBehaviour
@@ -41,6 +42,7 @@ public class ScreenSwitcher : MonoBehaviour
             SetScreenEnabled(currentScreen, true);
         }
     }
+    
 
     private void SetScreenEnabled(CanvasGroup screen, bool enabled)
     {
