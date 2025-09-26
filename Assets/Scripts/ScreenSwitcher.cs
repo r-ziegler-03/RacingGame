@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,42 +8,59 @@ public enum ScreenTypes
     Settings,
     Selection,
     Pause,
+    GameOver,
+}
+
+[Serializable]
+public class ScreenEntry
+{
+    public ScreenTypes type;
+    public CanvasGroup screen;
 }
 
 public class ScreenSwitcher : MonoBehaviour
 {
-    [SerializeField] private List<CanvasGroup> screens = new List<CanvasGroup>(3);
-    private Dictionary<ScreenTypes, CanvasGroup> screensDict = new Dictionary<ScreenTypes, CanvasGroup>();
+    [SerializeField] private List<ScreenEntry> screenEntries = new();
+    [SerializeField] private bool useDefaultScreen = true;
+    [SerializeField] private ScreenTypes defaultScreen = ScreenTypes.Menu;
 
+    private Dictionary<ScreenTypes, CanvasGroup> screensDict = new();
     private CanvasGroup currentScreen;
 
     private void Awake()
     {
-        for (int i = 0; i < screens.Count; i++)
+        foreach (var entry in screenEntries)
         {
-            ScreenTypes screenType = (ScreenTypes)i;
-            screensDict.Add(screenType, screens[i]);
-            SetScreenEnabled(screens[i], false);
+            if (!screensDict.ContainsKey(entry.type))
+            {
+                screensDict.Add(entry.type, entry.screen);
+                SetScreenEnabled(entry.screen, false);
+            }
+            else
+            {
+                Debug.LogWarning($"Duplicate screen type: {entry.type}");
+            }
         }
 
-        SwitchScreen(ScreenTypes.Menu);
+        if (useDefaultScreen && screensDict.TryGetValue(defaultScreen, out var startScreen))
+        {
+            SwitchScreen(defaultScreen);
+        }
     }
 
     public void SwitchScreen(ScreenTypes newScreenType)
     {
-        CanvasGroup oldScreen = currentScreen;
-        if (oldScreen != null)
+        if (!screensDict.TryGetValue(newScreenType, out var newScreen))
         {
-            SetScreenEnabled(currentScreen, false);
+            Debug.LogWarning($"Screen type {newScreenType} not found.");
+            return;
         }
-
-        currentScreen = screensDict[newScreenType];
         if (currentScreen != null)
-        {
-            SetScreenEnabled(currentScreen, true);
-        }
+            SetScreenEnabled(currentScreen, false);
+
+        currentScreen = newScreen;
+        SetScreenEnabled(currentScreen, true);
     }
-    
 
     private void SetScreenEnabled(CanvasGroup screen, bool enabled)
     {

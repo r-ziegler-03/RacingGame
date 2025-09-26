@@ -675,6 +675,7 @@ MonoBehaviour:
   settingsBackToMainMenuButton: {fileID: 554682885}
   selectionBackToMainMenuButton: {fileID: 1260622649}
   startRaceButton: {fileID: 744520150}
+  gameplaySceneName: Gameplay
 --- !u!4 &615383458
 Transform:
   m_ObjectHideFlags: 0
@@ -1190,10 +1191,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 473d58c7de4ae4e7582e51834c5bbc7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreenSwitcher
-  screens:
-  - {fileID: 765600318}
-  - {fileID: 1587532035}
-  - {fileID: 808830534}
+  screenEntries:
+  - type: 0
+    screen: {fileID: 765600318}
+  - type: 1
+    screen: {fileID: 1587532035}
+  - type: 2
+    screen: {fileID: 808830534}
 --- !u!4 &1236490299
 Transform:
   m_ObjectHideFlags: 0
